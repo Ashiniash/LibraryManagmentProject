@@ -1,17 +1,20 @@
 package org.example.service.implementation;
 
+import org.example.dao.repository.CartDetailRepository;
 import org.example.dao.repository.CartRepository;
+import org.example.dto.CartDTO;
 import org.example.model.Cart;
+import org.example.model.CartDetail;
 import org.example.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.ModelAndView;
-
 import java.util.List;
-import java.util.Map;
+
 
 public class CartServiceImpl implements CartService {
     @Autowired
     CartRepository cartRepository;
+    @Autowired
+    CartDetailRepository cartDetailRepository;
 
 
     enum orderStatus {
@@ -22,15 +25,16 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getCartById(int userId, int bookId) {
-        List<Cart>cartList=cartRepository.getAllCart(userId);
-        if ((cartList.isEmpty())){
+        List<Cart> cartList = cartRepository.getAllCart(userId);
+        if ((cartList.isEmpty())) {
             return getCart(userId);
-        }else{
-            if((cartRepository.findCart(userId, String.valueOf(orderStatus.PENDING))==null)){
+        } else {
+            if ((cartRepository.findCart(userId, String.valueOf(orderStatus.PENDING) ) == null)) {
                 return getCart(userId);
-            }else return cartRepository.findCart(userId, String.valueOf(orderStatus.PENDING));
+            } else return cartRepository.findCart(userId, String.valueOf(orderStatus.PENDING));
         }
     }
+
     private Cart getCart(int userId) {
         Cart newCart = new Cart();
         newCart.setUserId(userId);
@@ -38,26 +42,66 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(newCart);
         return newCart;
     }
+
     @Override
     public Cart getCartByStatus(int userId, String orderStatus) {
-        return cartRepository.findCart(userId,orderStatus);
+        return cartRepository.findCart(userId, orderStatus);
     }
 
     @Override
     public Cart getCartBookById(int cartId) {
-        return  cartRepository.findById(cartId).get();
+        return cartRepository.findById(cartId).get();
     }
 
     @Override
     public Cart findCartById(int cartId) {
         return cartRepository.findById(cartId).get();
     }
-//
-//    @Override
-//    public ModelAndView orderBookStatus(Cart carts) {
-//        carts.setOrderBook(true);
-//        cartRepository.save(carts);
-//        return null;
-//    }
 
+    @Override
+    public void placeOrder(Cart cart, int userId) {
+        cart.setRequestBook(true);
+        cart.setOrderStatus(String.valueOf(orderStatus.PENDING));
+        cart.setUserId(userId);
+        cartRepository.save(cart);
+    }
+
+
+    @Override
+    public List<Cart> getAllBookByStatus() {
+        return cartRepository.displayPendingBooks();
+    }
+
+    @Override
+    public Cart getCartsById(int cartId) {
+        return cartRepository.findById(cartId).get();
+    }
+
+    @Override
+    public void statusUpdateByLibrarian(CartDTO cartDTO, int cartId, CartDetail cartDetail) {
+        Cart cart = cartRepository.findById(cartId).get();
+        cart.setOrderStatus((String.valueOf(CartDetailServiceImpl.orderStatus.APPROVED)));
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public void statusRejectByLibrarian(CartDTO cartDTO, int cartId) {
+        Cart cart = cartRepository.findById(cartId).get();
+        cart.setOrderStatus((String.valueOf(orderStatus.PENDING)));
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public List<Cart> displayCartByUserId(int userId) {
+        return (List<Cart>) cartRepository.findById(userId).get();
+    }
+
+    @Override
+    public Cart getCartByUserId(int userId) {
+        return cartRepository.findById(userId).get();
+    }
 }
+
+
+
+

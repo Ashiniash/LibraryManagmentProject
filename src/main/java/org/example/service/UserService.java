@@ -6,7 +6,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
     List<User> registeredUsername(String username);

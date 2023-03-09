@@ -11,11 +11,5 @@ public interface BooksRepository extends JpaRepository<Book, Integer> {
 
     @Query("SELECT book.genre FROM Book book ")
     List<String> findAllGenre();
-
-    @Query("SELECT book.genre FROM Book book ")
-    List<Book> findBookByStatus();
-
-
-
 }
 

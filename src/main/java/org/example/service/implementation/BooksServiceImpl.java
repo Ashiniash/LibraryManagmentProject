@@ -2,11 +2,13 @@ package org.example.service.implementation;
 
 import org.example.dao.repository.BooksRepository;
 import org.example.dao.repository.CartDetailRepository;
-import org.example.dao.repository.OrderBooksRepository;
+import org.example.dao.repository.CartRepository;
 import org.example.dto.BookDTO;
 import org.example.model.Book;
+import org.example.model.Cart;
 import org.example.model.CartDetail;
 import org.example.service.BooksService;
+import org.example.service.CartDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,11 +18,12 @@ public class BooksServiceImpl implements BooksService {
     private static final String USERID = "userId";
     @Autowired
     BooksRepository booksRepository;
-
     @Autowired
-    OrderBooksRepository orderBooksRepository;
+    CartRepository cartRepository;
     @Autowired
     CartDetailRepository cartDetailRepository;
+    @Autowired
+    CartDetailService cartDetailService;
 
     enum orderStatus {
         PENDING, APPROVED, RETURNED;
@@ -36,18 +39,24 @@ public class BooksServiceImpl implements BooksService {
     public Book getBookById(int bookId) {
         return booksRepository.findById(bookId).get();
     }
+
     @Override
     public ModelAndView displayCustomBooks(int userId) {
         ModelAndView mav = new ModelAndView();
         List<String> allGenres = getAllGenre();
         Set<String> setWithoutDuplicates = new HashSet<>(allGenres);
         List<String> uniqueGenres = new ArrayList<>(setWithoutDuplicates);
-        List<CartDetail> myOrders = cartDetailRepository.displayMyOrders(userId);
+        List<Cart> cartList = cartRepository.displayMyOrders(userId);
         List<Book> newBookList = new ArrayList<>();
+        List<Cart> newCartList = new ArrayList<>();
         List<Book> bookList = booksRepository.findAll();
-        for (CartDetail cartDetail : myOrders) {
-            if (cartDetail.getOrderStatus().equals("APPROVED") || cartDetail.getOrderStatus().equals("PENDING")) {
-                newBookList.add(booksRepository.findById(cartDetail.getBookId()).get());
+        for (Cart cart : cartList) {
+            if ((cart.getOrderStatus().equals("APPROVED") || cart.getOrderStatus().equals("PENDING"))) {
+                newCartList.add(cartRepository.findCartById(cart.getCartId(), cart.getUserId()));
+               List <CartDetail> cartDetail = cartDetailRepository.findByCartId(cart.getCartId());
+                for(CartDetail cartDetails:cartDetail){
+                    Book book= findById(cartDetails.getBookId());
+                    newBookList.add(book);}
             }
         }
         bookList.removeAll(newBookList);
@@ -57,28 +66,6 @@ public class BooksServiceImpl implements BooksService {
         mav.addObject(USERID, userId);
         return mav;
     }
-
-//    @Override
-//    public ModelAndView displayCustomBooks(int userId) {
-//        ModelAndView mav = new ModelAndView();
-//        List<String> allGenres = getAllGenre();
-//        Set<String> setWithoutDuplicates = new HashSet<>(allGenres);
-//        List<String> uniqueGenres = new ArrayList<>(setWithoutDuplicates);
-//        List<OrderBook> myOrders = orderBooksRepository.displayMyOrders(userId);
-//        List<Book> newBookList = new ArrayList<>();
-//        List<Book> bookList = booksRepository.findAll();
-//        for (OrderBook orderBook : myOrders) {
-//            if (orderBook.getOrderStatus().equals("APPROVED") || orderBook.getOrderStatus().equals("PENDING")) {
-//                newBookList.add(booksRepository.findById(orderBook.getBookId()).get());
-//            }
-//        }
-//        bookList.removeAll(newBookList);
-//        mav.setViewName("displayBooks");
-//        mav.addObject("uniqueGenres", uniqueGenres);
-//        mav.addObject("bookList", bookList);
-//        mav.addObject(USERID, userId);
-//        return mav;
-//    }
 
 
     @Override

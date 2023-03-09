@@ -11,29 +11,24 @@
 <table border="1" width="90%">
 </tr>
 <tr>
-<th>Order Id</th>
-<th>Book Id</th>
+<th>Cart Id</th>
 <th>User Id</th>
 <th>Order Status</th>
-<th>Order Date</th>
-<th>Return Date</th>
 <th>Approve</th>
 <th>Reject</th>
 </tr>
-<c:forEach items="${orderBookList}" var="orderBook">
+<c:forEach items="${cartList}" var="cart">
 <tr>
-<td>${orderBook.orderId}
-<td>${orderBook.bookId}
-<td>${orderBook.userId}
-<td>${orderBook.orderStatus}
-<td>${orderBook.orderDate}
-<td>${orderBook.returnDate}
-<td><form action="/LibraryManagement/librarian/editUserForStatusApproval/${orderBook.orderId}">
+<td>${cart.cartId}
+<td>${cart.userId}
+<td>${cart.orderStatus}
+<td><form action="/LibraryManagement/librarian/editUserForStatusApproval/${cart.cartId}">
             <input type="submit" class="btn btn-danger" value="APPROVED"/></form></td>
-            <td><form action="/LibraryManagement/librarian/editUserForStatusRejected/${orderBook.orderId}">
+            <td><form action="/LibraryManagement/librarian/editUserForStatusRejected/${cart.cartId}">
                         <input type="submit" class="btn btn-danger" value="REJECT"/></form></td>
 </td>
 </c:forEach>
 </table>
+
 </body>
 </html>

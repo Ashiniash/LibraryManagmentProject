@@ -10,7 +10,11 @@ import java.util.List;
 public class CartDetailServiceImpl implements CartDetailService {
     @Autowired
     CartDetailRepository cartDetailRepository;
-
+    enum orderStatus {
+        PENDING,
+        APPROVED,
+        RETURNED;
+    }
 
 
     @Override
@@ -35,4 +39,41 @@ public class CartDetailServiceImpl implements CartDetailService {
     public CartDetail getCartBookById(int cartId) {
         return  cartDetailRepository.findById(cartId).get();
     }
+
+    @Override
+    public List<CartDetail> getAllBookByStatus() {
+        return cartDetailRepository.findAll();
+    }
+
+    @Override
+    public CartDetail getCartDetailsById(int cartDetailId) {
+        return cartDetailRepository.findById(cartDetailId).get();
+    }
+
+//    @Override
+//    public List<CartDetail> findViewBooks(int userId, int cartId) {
+//        return cartDetailRepository.findCart(userId,cartId);
+//    }
+
+//    @Override
+//    public List<CartDetail> findApprovedOrders(int userId) {
+//        return cartDetailRepository.displayApprovedOrders(userId);
+//    }
+
+//    @Override
+//    public List<CartDetail> findPendingOrders(int userId) {
+//        return cartDetailRepository.displayPendingOrders(userId);
+//    }
+
+    @Override
+    public List<CartDetail> getCartDetailsByCartId(int cartId) {
+        return (List<CartDetail>) cartDetailRepository.findById(cartId).get();
+    }
+
+//    @Override
+//    public void statusUpdateByLibrarian(CartDetailDTO cartDetailDTO, int cartDetailId) {
+//        CartDetail cartDetail = cartDetailRepository.findById(cartDetailId).get();
+//        cartDetail.setOrderStatus((String.valueOf(orderStatus.APPROVED)));
+//        cartDetailRepository.save(cartDetail);
+//    }
 }

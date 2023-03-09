@@ -13,14 +13,13 @@
 <div align="center">
 <h2>Confirm Approve</h2>
 <hr>
-<form:form action="/LibraryManagement/librarian/userStatusApproveByAdmin?orderId=${orderId}" method="post" modelAttribute="orderBook">
+<form:form action="/LibraryManagement/librarian/userStatusApproveByAdmin?cart=${cartId}" method="post" modelAttribute="cart">
 <table border="0" cellpadding="5">
 <tr>
-<td>Order Id: </td>
-<td>${orderBook.orderId}
-<form:hidden path="orderId"/>
+<td>Cart Id: </td>
+<td>${cart.cartId}
+<form:hidden path="cartId"/>
 </td>
-
 <tr>
    <td colspan="2"><input type="submit"
     class="blue-button" /></td>

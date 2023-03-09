@@ -1,16 +1,28 @@
-package org.example.model;
-
-import javax.persistence.*;
+package org.example.dto;
 import java.sql.Date;
+public class CartDetailDTO {
+    int userId;
 
-@Entity
-@Table(name = "cartdetail")
-public class CartDetail {
+    int bookId;
 
-    @Id
-    @Column(name = "cartDetail")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int cartDetailId;
+    int cartId;
+
+
+    Date orderDate;
+
+
+    Date returnDate;
+
+
+    String orderStatus;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public int getBookId() {
         return bookId;
@@ -27,19 +39,6 @@ public class CartDetail {
     public void setCartId(int cartId) {
         this.cartId = cartId;
     }
-    public int getCartDetailId() {
-        return cartDetailId;
-    }
-
-    public void setCartDetailId(int cartDetailId) {
-        this.cartDetailId = cartDetailId;
-    }
-
-
-    @Column(name = "bookId")
-    int bookId;
-    @Column(name = "cartId")
-    int cartId;
 
     public Date getOrderDate() {
         return orderDate;
@@ -57,12 +56,11 @@ public class CartDetail {
         this.returnDate = returnDate;
     }
 
-    @Column(name = "orderDate")
-    Date orderDate;
+    public String getOrderStatus() {
+        return orderStatus;
+    }
 
-    @Column(name = "returnDate")
-    Date returnDate;
-
-
-
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }

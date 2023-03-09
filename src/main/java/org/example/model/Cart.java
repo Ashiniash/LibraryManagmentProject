@@ -40,5 +40,14 @@ public class Cart {
 
 
 
+    @Column(name = "requestBook")
+    boolean requestBook;
 
+    public boolean isRequestBook() {
+        return requestBook;
+    }
+
+    public void setRequestBook(boolean requestBook) {
+        this.requestBook = requestBook;
+    }
 }

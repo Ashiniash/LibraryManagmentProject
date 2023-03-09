@@ -14,8 +14,9 @@
 <form method="get"  action="/LibraryManagement/librarian/displayAllBooks"></br>
 <input type="submit"class="blue-button"  value="Book List"/></form><br>
 
+
 <form method="get"  action="/LibraryManagement/librarian/displayAllBooksByStatus"></br>
-<input type="submit"class="blue-button"  value="Book List by Status"/></form><br>
+<input type="submit"class="blue-button"  value="Requested Books"/></form><br>
 
 
 <form method="get"  action="/LibraryManagement/librarian/userApproval"></br>

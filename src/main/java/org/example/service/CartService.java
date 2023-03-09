@@ -1,9 +1,10 @@
 package org.example.service;
 
+import org.example.dto.CartDTO;
 import org.example.model.Cart;
-import org.springframework.web.servlet.ModelAndView;
+import org.example.model.CartDetail;
 
-import java.util.Map;
+import java.util.List;
 
 
 public interface CartService {
@@ -15,6 +16,24 @@ public interface CartService {
 
     Cart findCartById(int cartId);
 
-//
-//    ModelAndView orderBookStatus(Cart carts);
+
+
+    void placeOrder(Cart cart, int userId);
+
+
+
+//    List<Cart> getRequestedSongsByStatus();
+
+    List<Cart> getAllBookByStatus();
+
+    Cart getCartsById(int cartId);
+
+    void statusUpdateByLibrarian(CartDTO cartDTO, int cartId, CartDetail cartDetail);
+
+    void statusRejectByLibrarian(CartDTO cartDTO, int cartId);
+
+
+    List<Cart> displayCartByUserId(int userId);
+
+    Cart getCartByUserId(int userId);
 }
