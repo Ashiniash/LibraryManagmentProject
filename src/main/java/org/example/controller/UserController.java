@@ -21,7 +21,6 @@ import java.util.*;
 public class UserController {
     private static final String ADDRESS = "addressDTO";
     private static final String USERID = "userId";
-    private static final String BOOK_LIST = "bookList";
     @Autowired
     UserService userService;
     @Autowired
@@ -32,14 +31,11 @@ public class UserController {
     CartService cartService;
     @Autowired
     CartDetailRepository cartDetailRepository;
-    @Autowired
-    UserRepository userRepository;
+
     @Autowired
     CartRepository cartRepository;
-    @Autowired
-    BooksRepository booksRepository;
-    @Autowired
-    CartDetailService cartDetailService;
+
+
 
     enum orderStatus {
         PENDING,
@@ -177,27 +173,6 @@ public class UserController {
     @PostMapping(value = "/returnBook/{cartId}/{userId}")
     public ModelAndView returnBook(@PathVariable("cartId") int cartId, @PathVariable("userId") int userId) {
         return booksService.returnBooks(cartId,userId);
-//        ModelAndView mav = new ModelAndView();
-//        List<Cart> cartList = cartRepository.displayMyOrdersByCartId(cartId, userId);
-//        List<Cart> newCartList = new ArrayList<>();
-//        List<Book> newBookList = new ArrayList<>();
-//        List<CartDetail> delayedBookList = new ArrayList<>();
-//        for (Cart carts : cartList) {
-//            newCartList.add(cartRepository.findCartById(carts.getCartId(), carts.getUserId()));
-//            List<CartDetail> cartDetail = cartDetailRepository.findByCartId(carts.getCartId());
-//            for (CartDetail cartDetails : cartDetail) {
-//                LocalDate todayDate = LocalDate.now();
-//                if (cartDetails.getReturnDate().toLocalDate().isAfter(todayDate)) {
-//                    delayedBookList.add(cartDetails);
-//                }
-//            }
-//        }
-//        cartService.returnBook(cartId, userId);
-//        mav.addObject("delayedBookList", delayedBookList);
-//        mav.addObject(BOOK_LIST, newBookList);
-//        mav.addObject("cart", newCartList);
-//        mav.setViewName("orderReturnedSuccess");
-//        return mav;
     }
 
     @PostMapping(value = "/saveOrderBook/{cartId}/{userId}")
@@ -209,45 +184,11 @@ public class UserController {
     @GetMapping(value = "/searchBook/{bookId}")
     public ModelAndView searchBook(@PathVariable int bookId) {
         return booksService.searchBook(bookId);
-//        try {
-//            ModelAndView mav = new ModelAndView();
-//            mav.addObject("searchedBookId", bookId);
-//            Book book = booksService.findById(bookId);
-//            if (book != null) {
-//                mav.setViewName("displaySearchBook");
-//                mav.addObject("book", book);
-//            } else {
-//                mav.setViewName("noSuchId");
-//                mav.addObject("error", "Book not found");
-//            }
-//            return mav;
-//        } catch (NoSuchElementException noSuchElementException) {
-//            ModelAndView mav = new ModelAndView();
-//            mav.setViewName("noSuchId");
-//            return mav;
-//        }
-
     }
 
     @GetMapping(value = "/viewBooks/{cartId}/{userId}")
     public ModelAndView viewBooks(@PathVariable int cartId, @PathVariable int userId) {
         return booksService.userViewBooks(cartId,userId);
-//        ModelAndView mav = new ModelAndView("myOrders");
-//        List<Cart> newCartList = new ArrayList<>();
-//        List<Book> newBookList = new ArrayList<>();
-//        List<Cart> cartList = cartRepository.displayMyOrdersByCartId(cartId, userId);
-//        for (Cart carts : cartList) {
-//            newCartList.add(cartRepository.findCartById(carts.getCartId(), carts.getUserId()));
-//            List<CartDetail> cartDetail = cartDetailRepository.findByCartId(carts.getCartId());
-//            for (CartDetail cartDetails : cartDetail) {
-//                Book book = booksService.findById(cartDetails.getBookId());
-//                newBookList.add(book);
-//            }
-//        }
-//        mav.addObject(BOOK_LIST, newBookList);
-//        mav.addObject("cart", newCartList);
-//        mav.addObject("book", new Book());
-//        return mav;
     }
 
     @GetMapping(value = "/loanedBooks/{userId}")
@@ -262,24 +203,6 @@ public class UserController {
     @GetMapping(value = "/pendingBooks/{userId}")
     public ModelAndView pendingBooks(@PathVariable int userId) {
         return booksService.displayPendingBooks(userId);
-//        ModelAndView mav = new ModelAndView("myOrders");
-//        List<Cart> newCartList = new ArrayList<>();
-//        List<Book> newBookList = new ArrayList<>();
-//        List<Cart> cartList = cartRepository.displayMyOrders(userId);
-//        for (Cart cart : cartList) {
-//            if (cart.getOrderStatus().equalsIgnoreCase("pending")) {
-//                newCartList.add(cartRepository.findCartById(cart.getCartId(), cart.getUserId()));
-//                List<CartDetail> cartDetail = cartDetailRepository.findByCartId(cart.getCartId());
-//                for (CartDetail cartDetails : cartDetail) {
-//                    Book book = booksService.findById(cartDetails.getBookId());
-//                    newBookList.add(book);
-//                    mav.addObject(BOOK_LIST, newBookList);
-//                    mav.addObject("cart", newCartList);
-//                }
-//            }
-//        }
-//        mav.addObject("book", new Book());
-//        return mav;
     }
 }
 
