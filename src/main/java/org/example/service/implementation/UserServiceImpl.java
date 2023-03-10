@@ -6,13 +6,14 @@ import org.example.model.User;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.security.Principal;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
+    private static final String ROLE_USER = "ROLE_USER";
     @Autowired
     UserRepository userRepository;
-    private static final String ROLE_USER = "ROLE_USER";
 
     @Override
     public List<User> registeredUsername(String username) {
@@ -99,7 +100,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void approvalUpdateByLibrarian(UserDTO userDTO,int userId) {
+    public void approvalUpdateByLibrarian(UserDTO userDTO, int userId) {
         User userObj = userRepository.findById(userId).get();
         userObj.setRole(ROLE_USER);
         userObj.setActive(userDTO.getActive());

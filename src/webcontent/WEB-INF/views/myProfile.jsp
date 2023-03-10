@@ -13,43 +13,31 @@
 <div align="center">
 <h2>My Profile</h2>
 <hr>
-<form:form action="/LibraryManagement/profileUpdate" method="post" modelAttribute="user">
+<form:form >
 <table border="0" cellpadding="5">
-<tr>
+ <tr>
 <td>User Id: </td>
-<td>${user.userId}
-<form:hidden path="userId"/>
-</td>
-</tr>
-<tr>
-<td>User Name: </td>
-<td>
-<form:input path="username" /></td>
-</tr>
-<tr>
-<td>Password: </td>
-<td><form:input path="password" /></td>
-</tr>
-<tr>
-<td> Confirm Password: </td>
-<td><form:input path="confirmPassword" /></td>
-</tr>
-<tr>
-<td>Email: </td>
-<td><form:input path="email" /></td>
-</tr>
-<tr>
-<tr>
-   <td colspan="2"><input type="submit"
-    class="blue-button" /></td>
-</tr>
+ <td>${user.userId}</td>
+ <tr> <td>User Name: </td>
+ <td>${user.username}</td></tr>
+ <tr> <td>Password: </td>
+ <td>${user.password}</td>
+ <tr> <td>Confirm Password : </td>
+ <td>${user.confirmPassword}</td>
+ <tr> <td>Email : </td>
+ <td>${user.email}</td>
+ </tr>
 </tr>
 <br>
 </tr>
 </table>
 </form:form>
+<form method="get"  action="/LibraryManagement/editProfile/${userId}"></br>
+<input type="submit" class="blue-button"  value="Edit Profile"/></form><br>
+
 <form method="get"  action="/LibraryManagement/addAddress/${userId}"></br>
 <input type="submit" class="blue-button"  value="Add Address"/></form><br>
+
 <form method="get"  action="/LibraryManagement/displayAddress/${userId}"></br>
 <input type="submit" class="blue-button"  value="View Address"/></form><br>
 </div>

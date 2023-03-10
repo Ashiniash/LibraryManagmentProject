@@ -8,24 +8,23 @@ import org.example.model.Cart;
 import org.example.model.CartDetail;
 import org.example.model.User;
 import org.example.service.BooksService;
-import org.example.service.CartDetailService;
 import org.example.service.CartService;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/librarian")
 public class LibrarianController {
+    private static final String BOOK_LIST = "bookList";
     @Autowired
     BooksService booksService;
     @Autowired
     CartService cartService;
-    @Autowired
-    CartDetailService cartDetailService;
     @Autowired
     UserService userService;
 
@@ -47,7 +46,7 @@ public class LibrarianController {
     public ModelAndView displayAllBooks() {
         ModelAndView mav = new ModelAndView("displayAllBooks");
         List<Book> bookList = booksService.getAllBook();
-        mav.addObject("bookList", bookList);
+        mav.addObject(BOOK_LIST, bookList);
         mav.addObject("book", new Book());
         return mav;
     }
@@ -120,5 +119,8 @@ public class LibrarianController {
         return mav;
     }
 
-
+    @GetMapping(value = "/viewBooks/{cartId}/{userId}")
+    public ModelAndView viewBooks(@PathVariable int cartId, @PathVariable int userId) {
+        return booksService.viewBooks(cartId, userId);
+    }
 }

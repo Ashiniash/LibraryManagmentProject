@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.controller.UserController;
 import org.example.dto.CartDTO;
 import org.example.model.Cart;
 import org.example.model.CartDetail;
@@ -17,9 +18,7 @@ public interface CartService {
     Cart findCartById(int cartId);
 
 
-
     void placeOrder(Cart cart, int userId);
-
 
 
 //    List<Cart> getRequestedSongsByStatus();
@@ -36,4 +35,8 @@ public interface CartService {
     List<Cart> displayCartByUserId(int userId);
 
     Cart getCartByUserId(int userId);
+
+    List<Cart> getAllBookByUserId(int userId, String orderStatus);
+
+    void returnBook(int cartId, int userId);
 }

@@ -4,6 +4,11 @@ import java.sql.Date;
 
 public class BookDTO {
     int bookId;
+    String bookTitle;
+    String authorName;
+    String publisher;
+    Date publicationDate;
+    String genre;
 
     public int getBookId() {
         return bookId;
@@ -52,11 +57,4 @@ public class BookDTO {
     public void setGenre(String genre) {
         this.genre = genre;
     }
-
-    String bookTitle;
-    String authorName;
-    String publisher;
-    Date publicationDate;
-
-    String genre;
 }

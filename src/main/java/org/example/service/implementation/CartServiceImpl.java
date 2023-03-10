@@ -1,5 +1,6 @@
 package org.example.service.implementation;
 
+import org.example.controller.UserController;
 import org.example.dao.repository.CartDetailRepository;
 import org.example.dao.repository.CartRepository;
 import org.example.dto.CartDTO;
@@ -7,6 +8,7 @@ import org.example.model.Cart;
 import org.example.model.CartDetail;
 import org.example.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 
@@ -16,20 +18,13 @@ public class CartServiceImpl implements CartService {
     @Autowired
     CartDetailRepository cartDetailRepository;
 
-
-    enum orderStatus {
-        PENDING,
-        APPROVED,
-        RETURNED;
-    }
-
     @Override
     public Cart getCartById(int userId, int bookId) {
         List<Cart> cartList = cartRepository.getAllCart(userId);
         if ((cartList.isEmpty())) {
             return getCart(userId);
         } else {
-            if ((cartRepository.findCart(userId, String.valueOf(orderStatus.PENDING) ) == null)) {
+            if ((cartRepository.findCart(userId, String.valueOf(orderStatus.PENDING)) == null)) {
                 return getCart(userId);
             } else return cartRepository.findCart(userId, String.valueOf(orderStatus.PENDING));
         }
@@ -66,7 +61,6 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
-
     @Override
     public List<Cart> getAllBookByStatus() {
         return cartRepository.displayPendingBooks();
@@ -100,7 +94,27 @@ public class CartServiceImpl implements CartService {
     public Cart getCartByUserId(int userId) {
         return cartRepository.findById(userId).get();
     }
+
+    @Override
+    public List<Cart> getAllBookByUserId(int userId, String orderStatus) {
+        return cartRepository.findBookByStatus(userId);
+    }
+
+    @Override
+    public void returnBook(int cartId, int userId) {
+        Cart cart = cartRepository.findById(cartId).get();
+        cart.setOrderStatus(String.valueOf(orderStatus.RETURNED));
+        cartRepository.save(cart);
+
+    }
+
+    enum orderStatus {
+        PENDING,
+        APPROVED,
+        RETURNED;
+    }
 }
+
 
 
 

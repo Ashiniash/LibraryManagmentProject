@@ -26,6 +26,19 @@ public interface BooksService {
     List<Book> getAllBook();
 
     Book deleteByBookId(int bookId);
+
+    ModelAndView viewBooks(int cartId, int userId);
+
+    ModelAndView displayCartsBooks(int userId);
+
+    ModelAndView returnBooks(int cartId, int userId);
+
+
+    ModelAndView searchBook(int bookId);
+
+    ModelAndView userViewBooks(int cartId, int userId);
+
+    ModelAndView displayPendingBooks(int userId);
 }
 
 

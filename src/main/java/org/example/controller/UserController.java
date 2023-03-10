@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -20,20 +22,12 @@ public class UserController {
     private static final String ADDRESS = "addressDTO";
     private static final String USERID = "userId";
     private static final String BOOK_LIST = "bookList";
-
-    enum orderStatus {
-        PENDING,
-        APPROVED,
-        RETURNED;
-    }
-
     @Autowired
     UserService userService;
     @Autowired
     AddressService addressService;
     @Autowired
     BooksService booksService;
-
     @Autowired
     CartService cartService;
     @Autowired
@@ -44,6 +38,15 @@ public class UserController {
     CartRepository cartRepository;
     @Autowired
     BooksRepository booksRepository;
+    @Autowired
+    CartDetailService cartDetailService;
+
+    enum orderStatus {
+        PENDING,
+        APPROVED,
+        RETURNED;
+    }
+
 
     @RequestMapping(value = "/register")
     public ModelAndView register(Principal principal) {
@@ -58,12 +61,10 @@ public class UserController {
 
     }
 
-
     @GetMapping(value = "/home")
     public ModelAndView home(ModelMap model, Principal principal) {
         return userService.validateAndReturnHome(principal);
     }
-
 
     @GetMapping(value = "/login")
     public ModelAndView login(ModelMap model) {
@@ -90,6 +91,14 @@ public class UserController {
         return mav;
     }
 
+    @GetMapping(value = "/editProfile/{userId}")
+    public ModelAndView editProfile(@PathVariable int userId) {
+        ModelAndView mav = new ModelAndView("editProfile");
+        User user = userService.getUserById(userId);
+        mav.addObject("user", user);
+        return mav;
+    }
+
     @PostMapping(value = "/profileUpdate")
     public ModelAndView profileUpdate(@ModelAttribute("user") UserDTO userDTO) {
         userService.updateUserProfile(userDTO);
@@ -108,7 +117,6 @@ public class UserController {
         addressService.addAddress(address, userId, user);
         return new ModelAndView("addressAddedSuccessfully");
     }
-
 
     @GetMapping(value = "/displayAddress/{userId}")
     public ModelAndView displayAddress(@PathVariable int userId) {
@@ -160,32 +168,37 @@ public class UserController {
         return new ModelAndView("addToCartSuccess");
     }
 
-
     @GetMapping(value = "/displayCartBooks/{userId}")
-    public ModelAndView displayBasketSongs(@PathVariable int userId) {
-        try {
-            Cart cart = cartService.getCartByStatus(userId, String.valueOf(orderStatus.PENDING));
-            List<Cart> cartList = cartRepository.displayMyOrdersByStatus(userId,String.valueOf(orderStatus.PENDING));
-            List<Cart> newCartList = new ArrayList<>();
-            List<Book> newBookList = new ArrayList<>();
-            for (Cart carts : cartList) {
-                newCartList.add(cartRepository.findCartsById(carts.getCartId(), carts.getUserId()));
-                List<CartDetail> cartDetail = cartDetailRepository.findByCartId(carts.getCartId());
-                for (CartDetail cartDetails : cartDetail) {
-                    Book book = booksService.findById(cartDetails.getBookId());
-                    newBookList.add(book);
-                }
-            }
-            ModelAndView modelAndView = new ModelAndView("displayCartBooks");
-            modelAndView.addObject(BOOK_LIST, newBookList);
-            modelAndView.addObject("cart",newCartList);
-            modelAndView.addObject("cartId", cart.getCartId());
-            return modelAndView;
-        } catch (NullPointerException e) {
-            return new ModelAndView("nullCart");
-        }
+    public ModelAndView displayCartBooks(@PathVariable int userId) {
+        return booksService.displayCartsBooks(userId);
     }
 
+
+    @PostMapping(value = "/returnBook/{cartId}/{userId}")
+    public ModelAndView returnBook(@PathVariable("cartId") int cartId, @PathVariable("userId") int userId) {
+        return booksService.returnBooks(cartId,userId);
+//        ModelAndView mav = new ModelAndView();
+//        List<Cart> cartList = cartRepository.displayMyOrdersByCartId(cartId, userId);
+//        List<Cart> newCartList = new ArrayList<>();
+//        List<Book> newBookList = new ArrayList<>();
+//        List<CartDetail> delayedBookList = new ArrayList<>();
+//        for (Cart carts : cartList) {
+//            newCartList.add(cartRepository.findCartById(carts.getCartId(), carts.getUserId()));
+//            List<CartDetail> cartDetail = cartDetailRepository.findByCartId(carts.getCartId());
+//            for (CartDetail cartDetails : cartDetail) {
+//                LocalDate todayDate = LocalDate.now();
+//                if (cartDetails.getReturnDate().toLocalDate().isAfter(todayDate)) {
+//                    delayedBookList.add(cartDetails);
+//                }
+//            }
+//        }
+//        cartService.returnBook(cartId, userId);
+//        mav.addObject("delayedBookList", delayedBookList);
+//        mav.addObject(BOOK_LIST, newBookList);
+//        mav.addObject("cart", newCartList);
+//        mav.setViewName("orderReturnedSuccess");
+//        return mav;
+    }
 
     @PostMapping(value = "/saveOrderBook/{cartId}/{userId}")
     public ModelAndView saveOrderBook(@ModelAttribute("cart") Cart cart, @PathVariable("userId") int userId) {
@@ -193,74 +206,80 @@ public class UserController {
         return new ModelAndView("orderPlacedSuccess");
     }
 
-
     @GetMapping(value = "/searchBook/{bookId}")
     public ModelAndView searchBook(@PathVariable int bookId) {
-        try {
-            ModelAndView mav = new ModelAndView();
-            mav.addObject("searchedBookId", bookId);
-            Book book = booksService.findById(bookId);
-            if (book != null) {
-                mav.setViewName("displaySearchBook");
-                mav.addObject("book", book);
-            } else {
-                mav.setViewName("noSuchId");
-                mav.addObject("error", "Book not found");
-            }
-            return mav;
-        } catch (NoSuchElementException noSuchElementException) {
-            ModelAndView mav = new ModelAndView();
-            mav.setViewName("noSuchId");
-            return mav;
-        }
+        return booksService.searchBook(bookId);
+//        try {
+//            ModelAndView mav = new ModelAndView();
+//            mav.addObject("searchedBookId", bookId);
+//            Book book = booksService.findById(bookId);
+//            if (book != null) {
+//                mav.setViewName("displaySearchBook");
+//                mav.addObject("book", book);
+//            } else {
+//                mav.setViewName("noSuchId");
+//                mav.addObject("error", "Book not found");
+//            }
+//            return mav;
+//        } catch (NoSuchElementException noSuchElementException) {
+//            ModelAndView mav = new ModelAndView();
+//            mav.setViewName("noSuchId");
+//            return mav;
+//        }
 
     }
 
-    @GetMapping(value = "/myOrder/{userId}")
+    @GetMapping(value = "/viewBooks/{cartId}/{userId}")
+    public ModelAndView viewBooks(@PathVariable int cartId, @PathVariable int userId) {
+        return booksService.userViewBooks(cartId,userId);
+//        ModelAndView mav = new ModelAndView("myOrders");
+//        List<Cart> newCartList = new ArrayList<>();
+//        List<Book> newBookList = new ArrayList<>();
+//        List<Cart> cartList = cartRepository.displayMyOrdersByCartId(cartId, userId);
+//        for (Cart carts : cartList) {
+//            newCartList.add(cartRepository.findCartById(carts.getCartId(), carts.getUserId()));
+//            List<CartDetail> cartDetail = cartDetailRepository.findByCartId(carts.getCartId());
+//            for (CartDetail cartDetails : cartDetail) {
+//                Book book = booksService.findById(cartDetails.getBookId());
+//                newBookList.add(book);
+//            }
+//        }
+//        mav.addObject(BOOK_LIST, newBookList);
+//        mav.addObject("cart", newCartList);
+//        mav.addObject("book", new Book());
+//        return mav;
+    }
+
+    @GetMapping(value = "/loanedBooks/{userId}")
     public ModelAndView myOrder(@PathVariable int userId) {
-        ModelAndView mav = new ModelAndView("myOrders");
-        List<Cart> newCartList = new ArrayList<>();
-        List<Book> newBookList = new ArrayList<>();
-        List<Cart> cartList = cartRepository.displayMyOrders(userId);
-        for (Cart cart : cartList) {
-            if (cart.getOrderStatus().equalsIgnoreCase("approved")) {
-                newCartList.add(cartRepository.findCartById(cart.getCartId(), cart.getUserId()));
-                List<CartDetail> cartDetail = cartDetailRepository.findByCartId(cart.getCartId());
-                for (CartDetail cartDetails : cartDetail) {
-                    Book book = booksService.findById(cartDetails.getBookId());
-                    newBookList.add(book);
-                }
-            }
-        }
-        mav.addObject(BOOK_LIST, newBookList);
-        mav.addObject("cart",newCartList);
+        ModelAndView mav = new ModelAndView("myOrdersAndReturn");
+        List<Cart> cartList = cartRepository.displayLoanedBookByCartId(userId, String.valueOf(orderStatus.APPROVED));
+        mav.addObject("cartList", cartList);
         mav.addObject("book", new Book());
         return mav;
     }
-
 
     @GetMapping(value = "/pendingBooks/{userId}")
     public ModelAndView pendingBooks(@PathVariable int userId) {
-        ModelAndView mav = new ModelAndView("myOrders");
-        List<Cart> newCartList = new ArrayList<>();
-        List<Book> newBookList = new ArrayList<>();
-        List<Cart> cartList = cartRepository.displayMyOrders(userId);
-        for (Cart cart : cartList) {
-            if (cart.getOrderStatus().equalsIgnoreCase("pending")) {
-                newCartList.add(cartRepository.findCartById(cart.getCartId(), cart.getUserId()));
-                List<CartDetail> cartDetail = cartDetailRepository.findByCartId(cart.getCartId());
-                for (CartDetail cartDetails : cartDetail) {
-                    Book book = booksService.findById(cartDetails.getBookId());
-                    newBookList.add(book);
-                    mav.addObject(BOOK_LIST, newBookList);
-                    mav.addObject("cart",newCartList);
-                }
-            }
-        }
-        mav.addObject("book", new Book());
-        return mav;
+        return booksService.displayPendingBooks(userId);
+//        ModelAndView mav = new ModelAndView("myOrders");
+//        List<Cart> newCartList = new ArrayList<>();
+//        List<Book> newBookList = new ArrayList<>();
+//        List<Cart> cartList = cartRepository.displayMyOrders(userId);
+//        for (Cart cart : cartList) {
+//            if (cart.getOrderStatus().equalsIgnoreCase("pending")) {
+//                newCartList.add(cartRepository.findCartById(cart.getCartId(), cart.getUserId()));
+//                List<CartDetail> cartDetail = cartDetailRepository.findByCartId(cart.getCartId());
+//                for (CartDetail cartDetails : cartDetail) {
+//                    Book book = booksService.findById(cartDetails.getBookId());
+//                    newBookList.add(book);
+//                    mav.addObject(BOOK_LIST, newBookList);
+//                    mav.addObject("cart", newCartList);
+//                }
+//            }
+//        }
+//        mav.addObject("book", new Book());
+//        return mav;
     }
-
-
 }
 

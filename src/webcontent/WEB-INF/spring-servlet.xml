@@ -32,7 +32,7 @@
             <props>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.format_sql">true</prop>
-<!--                <prop key="hibernate.hbm2ddl.auto">create-only</prop>-->
+                <!--                <prop key="hibernate.hbm2ddl.auto">create-only</prop>-->
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
             </props>
         </property>
@@ -56,7 +56,7 @@
     <bean id="booksService" class="org.example.service.implementation.BooksServiceImpl"/>
     <bean id="cartService" class="org.example.service.implementation.CartServiceImpl"/>
     <bean id="cartDetailService" class="org.example.service.implementation.CartDetailServiceImpl"/>
-<!--    <bean id="orderBooksService" class="org.example.service.implementation.OrderBooksServiceImpl"/>-->
+    <!--    <bean id="orderBooksService" class="org.example.service.implementation.OrderBooksServiceImpl"/>-->
     <mvc:resources mapping="/css/**" location="/css/"/>
     <mvc:annotation-driven/>
 </beans>

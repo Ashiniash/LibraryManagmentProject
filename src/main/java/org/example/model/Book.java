@@ -1,6 +1,8 @@
 package org.example.model;
+
 import javax.persistence.*;
 import java.sql.Date;
+
 @Entity
 @Table(name = "book")
 public class Book {
@@ -18,7 +20,6 @@ public class Book {
     Date publicationDate;
     @Column(name = "genre")
     String genre;
-
 
 
     public int getBookId() {
@@ -70,7 +71,7 @@ public class Book {
     }
 
     @Override
-   public boolean equals(Object obj) {
+    public boolean equals(Object obj) {
         if (!(obj instanceof Book)) {
             return false;
         }

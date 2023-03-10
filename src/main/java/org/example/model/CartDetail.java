@@ -11,6 +11,14 @@ public class CartDetail {
     @Column(name = "cartDetail")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int cartDetailId;
+    @Column(name = "bookId")
+    int bookId;
+    @Column(name = "cartId")
+    int cartId;
+    @Column(name = "orderDate")
+    Date orderDate;
+    @Column(name = "returnDate")
+    Date returnDate;
 
     public int getBookId() {
         return bookId;
@@ -27,6 +35,7 @@ public class CartDetail {
     public void setCartId(int cartId) {
         this.cartId = cartId;
     }
+
     public int getCartDetailId() {
         return cartDetailId;
     }
@@ -34,12 +43,6 @@ public class CartDetail {
     public void setCartDetailId(int cartDetailId) {
         this.cartDetailId = cartDetailId;
     }
-
-
-    @Column(name = "bookId")
-    int bookId;
-    @Column(name = "cartId")
-    int cartId;
 
     public Date getOrderDate() {
         return orderDate;
@@ -56,13 +59,6 @@ public class CartDetail {
     public void setReturnDate(Date returnDate) {
         this.returnDate = returnDate;
     }
-
-    @Column(name = "orderDate")
-    Date orderDate;
-
-    @Column(name = "returnDate")
-    Date returnDate;
-
 
 
 }
