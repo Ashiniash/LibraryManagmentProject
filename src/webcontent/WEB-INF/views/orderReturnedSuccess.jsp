@@ -8,6 +8,7 @@
 </head>
 <body>
 <center>
+<c:if test="${!empty delayedBookList}">
 <table border="1" width="90%">
 <tr>
 <th>Book Id</th>
@@ -24,6 +25,8 @@
 </td>
 </c:forEach>
 </table>
+</c:if>
+
 <h1>Book Returned Success</h1>
 </form>
 </body>

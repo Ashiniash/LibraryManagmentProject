@@ -8,7 +8,6 @@ import org.example.model.Book;
 import org.example.model.Cart;
 import org.example.model.CartDetail;
 import org.example.service.BooksService;
-import org.example.service.CartDetailService;
 import org.example.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,6 +26,8 @@ public class BooksServiceImpl implements BooksService {
     @Autowired
     CartService cartService;
     private static final String BOOK_LIST = "bookList";
+    private static final String MY_ORDERS = "myOrders";
+
     enum orderStatus {
         PENDING,
         APPROVED,
@@ -39,10 +40,6 @@ public class BooksServiceImpl implements BooksService {
         return booksRepository.findAllGenre();
     }
 
-    @Override
-    public Book getBookById(int bookId) {
-        return booksRepository.findById(bookId).get();
-    }
 
     @Override
     public ModelAndView displayCustomBooks(int userId) {
@@ -67,24 +64,12 @@ public class BooksServiceImpl implements BooksService {
         bookList.removeAll(newBookList);
         mav.setViewName("displayBooks");
         mav.addObject("uniqueGenres", uniqueGenres);
-        mav.addObject("bookList", bookList);
+        mav.addObject(BOOK_LIST, bookList);
         mav.addObject("newCartList", newCartList);
         mav.addObject(USERID, userId);
         return mav;
     }
 
-    @Override
-    public List<Book> getAllBooks(int userId) {
-        return booksRepository.findAll();
-    }
-
-    @Override
-    public List<Book> getBookList(int userId) {
-        Book book = new Book();
-        book.setBookId(book.getBookId());
-        book.setBookTitle(book.getBookTitle());
-        return booksRepository.findAll();
-    }
 
     @Override
     public Book findById(int bookId) {
@@ -115,20 +100,17 @@ public class BooksServiceImpl implements BooksService {
 
     @Override
     public ModelAndView viewBooks(int cartId, int userId) {
-                ModelAndView mav = new ModelAndView("myOrders");
-        List<Cart> newCartList = new ArrayList<>();
+        ModelAndView mav = new ModelAndView(MY_ORDERS);
         List<Book> newBookList = new ArrayList<>();
         List<Cart> cartList = cartRepository.displayMyOrdersByCartId(cartId, userId);
         for (Cart carts : cartList) {
-            newCartList.add(cartRepository.findCartById(carts.getCartId(), carts.getUserId()));
             List<CartDetail> cartDetail = cartDetailRepository.findByCartId(carts.getCartId());
             for (CartDetail cartDetails : cartDetail) {
-                Book book =findById(cartDetails.getBookId());
+                Book book = findById(cartDetails.getBookId());
                 newBookList.add(book);
             }
         }
         mav.addObject(BOOK_LIST, newBookList);
-        mav.addObject("newCartList", newCartList);
         mav.addObject("book", new Book());
         return mav;
     }
@@ -162,30 +144,25 @@ public class BooksServiceImpl implements BooksService {
     public ModelAndView returnBooks(int cartId, int userId) {
         ModelAndView mav = new ModelAndView();
         List<Cart> cartList = cartRepository.displayMyOrdersByCartId(cartId, userId);
-        List<Cart> newCartList = new ArrayList<>();
-        List<Book> newBookList = new ArrayList<>();
         List<CartDetail> delayedBookList = new ArrayList<>();
         for (Cart carts : cartList) {
-            newCartList.add(cartRepository.findCartById(carts.getCartId(), carts.getUserId()));
             List<CartDetail> cartDetail = cartDetailRepository.findByCartId(carts.getCartId());
             for (CartDetail cartDetails : cartDetail) {
                 LocalDate todayDate = LocalDate.now();
-                if (cartDetails.getReturnDate().toLocalDate().isAfter(todayDate)) {
+                if (cartDetails.getReturnDate().toLocalDate().isBefore(todayDate)) {
                     delayedBookList.add(cartDetails);
                 }
             }
         }
         cartService.returnBook(cartId, userId);
         mav.addObject("delayedBookList", delayedBookList);
-        mav.addObject(BOOK_LIST, newBookList);
-        mav.addObject("cart", newCartList);
         mav.setViewName("orderReturnedSuccess");
         return mav;
     }
 
     @Override
     public ModelAndView searchBook(int bookId) {
-                try {
+        try {
             ModelAndView mav = new ModelAndView();
             mav.addObject("searchedBookId", bookId);
             Book book = findById(bookId);
@@ -204,29 +181,10 @@ public class BooksServiceImpl implements BooksService {
         }
     }
 
-    @Override
-    public ModelAndView userViewBooks(int cartId, int userId) {
-        ModelAndView mav = new ModelAndView("myOrders");
-        List<Cart> newCartList = new ArrayList<>();
-        List<Book> newBookList = new ArrayList<>();
-        List<Cart> cartList = cartRepository.displayMyOrdersByCartId(cartId, userId);
-        for (Cart carts : cartList) {
-            newCartList.add(cartRepository.findCartById(carts.getCartId(), carts.getUserId()));
-            List<CartDetail> cartDetail = cartDetailRepository.findByCartId(carts.getCartId());
-            for (CartDetail cartDetails : cartDetail) {
-                Book book = findById(cartDetails.getBookId());
-                newBookList.add(book);
-            }
-        }
-        mav.addObject(BOOK_LIST, newBookList);
-        mav.addObject("cart", newCartList);
-        mav.addObject("book", new Book());
-        return mav;
-    }
 
     @Override
     public ModelAndView displayPendingBooks(int userId) {
-        ModelAndView mav = new ModelAndView("myOrders");
+        ModelAndView mav = new ModelAndView(MY_ORDERS);
         List<Cart> newCartList = new ArrayList<>();
         List<Book> newBookList = new ArrayList<>();
         List<Cart> cartList = cartRepository.displayMyOrders(userId);
@@ -244,6 +202,11 @@ public class BooksServiceImpl implements BooksService {
         }
         mav.addObject("book", new Book());
         return mav;
+    }
+
+    @Override
+    public List<Book> findByGenre(String genre) {
+        return booksRepository.findByGenre(genre);
     }
 }
 

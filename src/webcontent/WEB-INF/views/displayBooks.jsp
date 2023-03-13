@@ -7,20 +7,27 @@
     <title>Books</title>
 </head>
 <body>
-   <center>
-
+  <center>
       <h1>Books</h1>
       <h2>Search Book</h2>Enter ID to Search:
       <input type="number" id="bookId" >
       <button onclick='window.location ="/LibraryManagement/searchBook/${bookId}"+document.getElementById("bookId").value'
       class="blue-button">Submit  </button>
-
-        <table>
-            <c:forEach var="genre" items="${uniqueGenres}">
-                <tr>
-                    <td><b>${genre}</td>
-                </tr>
-                <tr>
+ <table>
+<form action="/LibraryManagement/searchByGenre" method="post">
+      <label for="genre">Genre:</label>
+      <select name="genre" id="genre">
+     <c:forEach var="genre" items="${uniqueGenres}">
+        <option value="${genre}">${genre}</option>
+       </c:forEach>
+        <input type="submit" value="Submit" />
+       </form>
+</select>
+   <c:forEach var="genre" items="${uniqueGenres}">
+     <tr>
+       <td><b>${genre}</td>
+     </tr>
+               <tr>
                 <th>Book Id</th>
                 <th>Book Title</th>
                 <th>Author Name</th>

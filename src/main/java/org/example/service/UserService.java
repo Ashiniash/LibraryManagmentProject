@@ -3,7 +3,6 @@ package org.example.service;
 import org.example.dto.UserDTO;
 import org.example.model.User;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.security.Principal;
 import java.util.List;
 

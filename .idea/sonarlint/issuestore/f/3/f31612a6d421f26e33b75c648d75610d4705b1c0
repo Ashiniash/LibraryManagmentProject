@@ -1,9 +1,9 @@
 
 
-java:S4165"dRemove this useless assignment; "bookId" already holds the assigned value along all execution paths.(óÉŞƒÿÿÿÿÿ
+java:S4165"dRemove this useless assignment; "bookId" already holds the assigned value along all execution paths.(óÉŞƒÿÿÿÿÿ
 f
-java:S1206I"PThis class overrides "equals()" and should therefore also override "hashCode()".(ÜÑã
+java:S1206J"PThis class overrides "equals()" and should therefore also override "hashCode()".(ÜÑã
 C
-java:S1172"-Remove this unused method parameter "bookId".(‹ ²
+java:S1172"-Remove this unused method parameter "bookId".(‹ ²
 J
-java:S1656"/Remove or correct this useless self-assignment.(óÉŞƒÿÿÿÿÿ
+java:S1656"/Remove or correct this useless self-assignment.(óÉŞƒÿÿÿÿÿ

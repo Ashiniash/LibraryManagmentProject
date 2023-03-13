@@ -13,7 +13,7 @@
 <div align="center">
 <h2>Confirm Approve</h2>
 <hr>
-<form:form action="/LibraryManagement/librarian/userStatusApproveByAdmin?cart=${cartId}" method="post" modelAttribute="cart">
+<form:form action="/LibraryManagement/librarian/userStatusApproveByLibrarian?cart=${cartId}" method="post" modelAttribute="cart">
 <table border="0" cellpadding="5">
 <tr>
 <td>Cart Id: </td>

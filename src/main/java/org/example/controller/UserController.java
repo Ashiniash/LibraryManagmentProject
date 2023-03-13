@@ -1,9 +1,7 @@
 package org.example.controller;
 
-import org.example.dao.repository.BooksRepository;
 import org.example.dao.repository.CartDetailRepository;
 import org.example.dao.repository.CartRepository;
-import org.example.dao.repository.UserRepository;
 import org.example.dto.AddressDTO;
 import org.example.dto.UserDTO;
 import org.example.model.*;
@@ -14,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
 public class UserController {
     private static final String ADDRESS = "addressDTO";
     private static final String USERID = "userId";
+    private static final String BOOK_LIST = "bookList";
     @Autowired
     UserService userService;
     @Autowired
@@ -34,7 +32,6 @@ public class UserController {
 
     @Autowired
     CartRepository cartRepository;
-
 
 
     enum orderStatus {
@@ -109,8 +106,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/saveAddress/{userId}")
-    public ModelAndView saveAddress(@ModelAttribute("address") AddressDTO address, @ModelAttribute("user") UserDTO user, @PathVariable int userId) {
-        addressService.addAddress(address, userId, user);
+    public ModelAndView saveAddress(@ModelAttribute("address") AddressDTO addressDTO, @ModelAttribute("user") UserDTO userDTO, @PathVariable int userId) {
+        addressService.addAddress(addressDTO, userId, userDTO);
         return new ModelAndView("addressAddedSuccessfully");
     }
 
@@ -133,8 +130,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/addressUpdate")
-    public ModelAndView addressUpdate(@ModelAttribute("address") AddressDTO address) {
-        addressService.addressUpdate(address);
+    public ModelAndView addressUpdate(@ModelAttribute("address") AddressDTO addressDTO) {
+        addressService.addressUpdate(addressDTO);
         return new ModelAndView("addressUpdatedSuccessfully");
     }
 
@@ -170,11 +167,6 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/returnBook/{cartId}/{userId}")
-    public ModelAndView returnBook(@PathVariable("cartId") int cartId, @PathVariable("userId") int userId) {
-        return booksService.returnBooks(cartId,userId);
-    }
-
     @PostMapping(value = "/saveOrderBook/{cartId}/{userId}")
     public ModelAndView saveOrderBook(@ModelAttribute("cart") Cart cart, @PathVariable("userId") int userId) {
         cartService.placeOrder(cart, userId);
@@ -188,7 +180,7 @@ public class UserController {
 
     @GetMapping(value = "/viewBooks/{cartId}/{userId}")
     public ModelAndView viewBooks(@PathVariable int cartId, @PathVariable int userId) {
-        return booksService.userViewBooks(cartId,userId);
+        return booksService.viewBooks(cartId, userId);
     }
 
     @GetMapping(value = "/loanedBooks/{userId}")
@@ -203,6 +195,19 @@ public class UserController {
     @GetMapping(value = "/pendingBooks/{userId}")
     public ModelAndView pendingBooks(@PathVariable int userId) {
         return booksService.displayPendingBooks(userId);
+    }
+
+    @PostMapping(value = "/returnBook/{cartId}/{userId}")
+    public ModelAndView returnBook(@PathVariable("cartId") int cartId, @PathVariable("userId") int userId) {
+        return booksService.returnBooks(cartId, userId);
+    }
+    @PostMapping("/searchByGenre")
+    public ModelAndView searchByGenre(@RequestParam("genre") String genre) {
+        List<Book> bookList = booksService.findByGenre(genre);
+        ModelAndView mav = new ModelAndView("genreBooks");
+        mav.addObject("book",bookList);
+        mav.addObject(BOOK_LIST, bookList);
+        return mav;
     }
 }
 

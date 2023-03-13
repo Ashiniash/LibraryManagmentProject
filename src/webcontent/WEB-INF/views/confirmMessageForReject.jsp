@@ -13,7 +13,7 @@
 <div align="center">
 <h2>Confirm To Reject</h2>
 <hr>
-<form:form action="/LibraryManagement/librarian/userStatusRejectByAdmin?cart=${cartId}" method="post" modelAttribute="cart">
+<form:form action="/LibraryManagement/librarian/userStatusRejectByLibrarian?cart=${cartId}" method="post" modelAttribute="cart">
 <table border="0" cellpadding="5">
 <tr>
 <td>Cart Id: </td>

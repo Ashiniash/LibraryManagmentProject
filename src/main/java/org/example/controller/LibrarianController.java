@@ -28,7 +28,6 @@ public class LibrarianController {
     @Autowired
     UserService userService;
 
-
     @RequestMapping(value = "/addBook")
     public ModelAndView addBook() {
         ModelAndView mav = new ModelAndView("addBook");
@@ -70,13 +69,13 @@ public class LibrarianController {
 
     @GetMapping(value = "/editUserApprovalByLibrarian/{userId}")
     public ModelAndView editUserApprovalByLibrarian(@PathVariable int userId) {
-        ModelAndView mav = new ModelAndView("editUserApprovalByAdmin");
+        ModelAndView mav = new ModelAndView("editUserApprovalByLibrarian");
         User user = userService.getUserById(userId);
         mav.addObject("user", user);
         return mav;
     }
 
-    @PostMapping(value = "/userApprovalUpdateByAdmin")
+    @PostMapping(value = "/userApprovalUpdateByLibrarian")
     public ModelAndView userApprovalUpdateByLibrarian(@ModelAttribute("user") UserDTO userDTO, @RequestParam int userId) {
         userService.approvalUpdateByLibrarian(userDTO, userId);
         return new ModelAndView("approvalSuccessByAdmin");
@@ -98,13 +97,13 @@ public class LibrarianController {
         return mav;
     }
 
-    @PostMapping(value = "/userStatusApproveByAdmin")
+    @PostMapping(value = "/userStatusApproveByLibrarian")
     public ModelAndView userStatusUpdateByAdmin(@ModelAttribute("cart") CartDTO cartDTO, @RequestParam int cartId, @ModelAttribute("cartDetail") CartDetail cartDetail) {
         cartService.statusUpdateByLibrarian(cartDTO, cartId, cartDetail);
         return new ModelAndView("approvalSuccessByAdmin");
     }
 
-    @PostMapping(value = "/userStatusRejectByAdmin")
+    @PostMapping(value = "/userStatusRejectByLibrarian")
     public ModelAndView userStatusRejectByAdmin(@ModelAttribute("cart") CartDTO cartDTO, @RequestParam int cartId) {
         cartService.statusRejectByLibrarian(cartDTO, cartId);
         return new ModelAndView("approvalStatusRejected");

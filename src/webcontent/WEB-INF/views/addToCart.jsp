@@ -7,7 +7,6 @@
 <jsp:include page="style.jsp" />
 </head>
 <h1>Place Order</h1><hr>
-
 ${bookId}
 <body>
 <form:form method="post" modelAttribute="cartDetail" action="/LibraryManagement/saveCart/${bookId}/${userId}">
@@ -23,9 +22,9 @@ ${bookId}
        <td><form:label path="returnDate">Return Date:</form:label></td>
        <td><form:input path="returnDate" size="30" type="date" maxlength="30"></form:input></td>
 </tr>
- <tr>
+<tr>
        <td cols pan="2"><input type="submit"
-         class="blue-button" /></td>
+       class="blue-button" /></td>
 </tr>
 </table>
 </form:form>

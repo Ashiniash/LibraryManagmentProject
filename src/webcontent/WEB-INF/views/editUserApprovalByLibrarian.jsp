@@ -13,7 +13,7 @@
 <div align="center">
 <h2>User Detail</h2>
 <hr>
-<form:form action="/LibraryManagement/librarian/userApprovalUpdateByAdmin?userId=${userId}" method="post" modelAttribute="user">
+<form:form action="/LibraryManagement/librarian/userApprovalUpdateByLibrarian?userId=${userId}" method="post" modelAttribute="user">
 <table border="0" cellpadding="5">
 <tr>
 <td>User Id: </td>

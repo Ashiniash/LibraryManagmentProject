@@ -15,18 +15,18 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void addAddress(AddressDTO addressDTO, int userId, UserDTO userDTO) {
-        Address addressObj = new Address();
-        addressObj.setAddressId(addressDTO.getAddressId());
-        addressObj.setCountry(addressDTO.getCountry());
-        addressObj.setDistrict(addressDTO.getDistrict());
-        addressObj.setHouseNumber(addressDTO.getHouseNumber());
-        addressObj.setTown(addressDTO.getTown());
-        addressObj.setStreet(addressDTO.getStreet());
-        addressObj.setPhoneNumber(addressDTO.getPhoneNumber());
-        addressObj.setPinCode(addressDTO.getPinCode());
-        addressObj.setUserId(addressDTO.getUserId());
+        Address address = new Address();
+        address.setAddressId(addressDTO.getAddressId());
+        address.setCountry(addressDTO.getCountry());
+        address.setDistrict(addressDTO.getDistrict());
+        address.setHouseNumber(addressDTO.getHouseNumber());
+        address.setTown(addressDTO.getTown());
+        address.setStreet(addressDTO.getStreet());
+        address.setPhoneNumber(addressDTO.getPhoneNumber());
+        address.setPinCode(addressDTO.getPinCode());
+        address.setUserId(addressDTO.getUserId());
         userDTO.setUserId(addressDTO.getUserId());
-        addressRepository.save(addressObj);
+        addressRepository.save(address);
     }
 
 

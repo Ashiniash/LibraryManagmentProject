@@ -1,7 +1,5 @@
 package org.example.service.implementation;
 
-import org.example.controller.UserController;
-import org.example.dao.repository.CartDetailRepository;
 import org.example.dao.repository.CartRepository;
 import org.example.dto.CartDTO;
 import org.example.model.Cart;
@@ -13,10 +11,15 @@ import java.util.List;
 
 
 public class CartServiceImpl implements CartService {
+    enum orderStatus {
+        PENDING,
+        APPROVED,
+        RETURNED;
+    }
+
     @Autowired
     CartRepository cartRepository;
-    @Autowired
-    CartDetailRepository cartDetailRepository;
+
 
     @Override
     public Cart getCartById(int userId, int bookId) {
@@ -43,15 +46,6 @@ public class CartServiceImpl implements CartService {
         return cartRepository.findCart(userId, orderStatus);
     }
 
-    @Override
-    public Cart getCartBookById(int cartId) {
-        return cartRepository.findById(cartId).get();
-    }
-
-    @Override
-    public Cart findCartById(int cartId) {
-        return cartRepository.findById(cartId).get();
-    }
 
     @Override
     public void placeOrder(Cart cart, int userId) {
@@ -74,7 +68,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public void statusUpdateByLibrarian(CartDTO cartDTO, int cartId, CartDetail cartDetail) {
         Cart cart = cartRepository.findById(cartId).get();
-        cart.setOrderStatus((String.valueOf(CartDetailServiceImpl.orderStatus.APPROVED)));
+        cart.setOrderStatus((String.valueOf(orderStatus.APPROVED)));
         cartRepository.save(cart);
     }
 
@@ -85,20 +79,6 @@ public class CartServiceImpl implements CartService {
         cartRepository.save(cart);
     }
 
-    @Override
-    public List<Cart> displayCartByUserId(int userId) {
-        return (List<Cart>) cartRepository.findById(userId).get();
-    }
-
-    @Override
-    public Cart getCartByUserId(int userId) {
-        return cartRepository.findById(userId).get();
-    }
-
-    @Override
-    public List<Cart> getAllBookByUserId(int userId, String orderStatus) {
-        return cartRepository.findBookByStatus(userId);
-    }
 
     @Override
     public void returnBook(int cartId, int userId) {
@@ -108,11 +88,7 @@ public class CartServiceImpl implements CartService {
 
     }
 
-    enum orderStatus {
-        PENDING,
-        APPROVED,
-        RETURNED;
-    }
+
 }
 
 

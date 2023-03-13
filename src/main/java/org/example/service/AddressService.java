@@ -13,5 +13,5 @@ public interface AddressService {
 
     Address findAddressById(int addressId);
 
-    void addressUpdate(AddressDTO address);
+    void addressUpdate(AddressDTO addressDTO);
 }

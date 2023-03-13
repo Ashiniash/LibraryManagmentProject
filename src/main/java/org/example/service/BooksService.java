@@ -10,14 +10,7 @@ import java.util.List;
 public interface BooksService {
     List<String> getAllGenre();
 
-    Book getBookById(int bookId);
-
-
     ModelAndView displayCustomBooks(int userId);
-
-    List<Book> getAllBooks(int userId);
-
-    List<Book> getBookList(int userId);
 
     Book findById(int bookId);
 
@@ -36,9 +29,9 @@ public interface BooksService {
 
     ModelAndView searchBook(int bookId);
 
-    ModelAndView userViewBooks(int cartId, int userId);
-
     ModelAndView displayPendingBooks(int userId);
+
+    List<Book> findByGenre(String genre);
 }
 
 
